@@ -2,8 +2,6 @@ const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
 context.scale(20, 20); 
-context.fillStyle = 'black';
-context.fillRect(0, 0, canvas.width, canvas.height);
 
 const matrix = [
   // T shape
@@ -11,6 +9,11 @@ const matrix = [
   [1, 1, 1],
   [0, 1, 0],
 ];
+
+const player = {
+  pos: {x: 5, y: 5},
+  matrix
+};
 
 drawMartrix = (matrix, offset) => {
   const unitSize = 1;
@@ -30,4 +33,17 @@ drawMartrix = (matrix, offset) => {
   });
 }
 
-drawMartrix(matrix, {x: 5, y: 5});
+draw = () => {
+  // clear the canvas first
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  
+  drawMartrix(player.matrix, player.pos);
+}
+
+update = () => {
+  draw();
+  requestAnimationFrame(update);
+}
+
+update();
