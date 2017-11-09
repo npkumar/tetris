@@ -15,6 +15,10 @@ const player = {
   matrix
 };
 
+let lastTime = 0;
+let dropCounter = 0;
+let dropInterval = 1000; // 1 second
+
 drawMartrix = (matrix, offset) => {
   const unitSize = 1;
   // forEach (currentValue, index)
@@ -37,11 +41,22 @@ draw = () => {
   // clear the canvas first
   context.fillStyle = 'black';
   context.fillRect(0, 0, canvas.width, canvas.height);
-  
+
   drawMartrix(player.matrix, player.pos);
 }
 
-update = () => {
+update = (time = 0) => {
+  const deltaTime = time - lastTime;
+  lastTime = time;
+
+  // dropCounter increases to dropInterval (1s)
+  // move player postion and reset the dropCounter
+  dropCounter += deltaTime;
+  if (dropCounter >= dropInterval) {
+    player.pos.y++;
+    dropCounter = 0;
+  }
+
   draw();
   requestAnimationFrame(update);
 }
