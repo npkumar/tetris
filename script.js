@@ -15,9 +15,26 @@ const player = {
   matrix
 };
 
+const arena = createMatrix(12, 20);
+
 let lastTime = 0;
 let dropCounter = 0;
 let dropInterval = 1000; // 1 second
+
+/**
+ * Creates an all 0 matrix
+ * @param {Integer} w width
+ * @param {Integer} h height
+ * 
+ * @returns {Integer[][]} all zero matrix of size w * h
+ */
+function createMatrix(w, h){
+  const matrix = [];
+  while (h--) {
+    matrix.push(new Array(w).fill(0));
+  }
+  return matrix;
+}
 
 drawMartrix = (matrix, offset) => {
   const unitSize = 1;
@@ -45,6 +62,11 @@ draw = () => {
   drawMartrix(player.matrix, player.pos);
 }
 
+playerDrop = () => {
+  player.pos.y++;
+  dropCounter = 0;
+}
+
 update = (time = 0) => {
   const deltaTime = time - lastTime;
   lastTime = time;
@@ -53,8 +75,7 @@ update = (time = 0) => {
   // move player postion and reset the dropCounter
   dropCounter += deltaTime;
   if (dropCounter >= dropInterval) {
-    player.pos.y++;
-    dropCounter = 0;
+    playerDrop();
   }
 
   draw();
@@ -72,7 +93,6 @@ document.addEventListener('keydown', event => {
   } else if (event.code === 'ArrowRight') {
     player.pos.x++;
   } else if (event.code === 'ArrowDown') {
-    player.pos.y++;
-    dropCounter = 0;
+    playerDrop();
   }
 });
