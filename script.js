@@ -36,6 +36,27 @@ function createMatrix(w, h){
   return matrix;
 }
 
+/**
+ * Copies values from player matrix to arena matrix
+ * @param {Integer[][]} arena
+ * @param {Object} player
+ * @param {Integer[][]} player.matrix 
+ */
+function merge(arena, player) {
+  player.matrix.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value != 0) {
+        // x y for inverted T shape
+        // 0 1
+        // 1 1
+        // 2 1
+        // 1 2
+        arena[y + player.pos.y][x + player.pos.x] = value;
+      }
+    });
+  });
+}
+
 drawMartrix = (matrix, offset) => {
   const unitSize = 1;
   // forEach (currentValue, index)
