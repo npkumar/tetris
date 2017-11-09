@@ -12,16 +12,22 @@ const matrix = [
   [0, 1, 0],
 ];
 
-drawMartrix = matrix => {
+drawMartrix = (matrix, offset) => {
+  const unitSize = 1;
   // forEach (currentValue, index)
   matrix.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value != 0) {
         context.fillStyle = 'red';
-        context.fillRect(x, y, 1, 1);
+        context.fillRect(
+          x + offset.x,
+          y + offset.y,
+          unitSize,
+          unitSize
+        );
       }
     });
   });
 }
 
-drawMartrix(matrix);
+drawMartrix(matrix, {x: 5, y: 5});
