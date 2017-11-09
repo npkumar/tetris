@@ -61,4 +61,18 @@ update = (time = 0) => {
   requestAnimationFrame(update);
 }
 
+// main update call
 update();
+
+// keyboard controls
+document.addEventListener('keydown', event => {
+  // or use keyCode, code is more readable
+  if (event.code === 'ArrowLeft') {
+    player.pos.x--;
+  } else if (event.code === 'ArrowRight') {
+    player.pos.x++;
+  } else if (event.code === 'ArrowDown') {
+    player.pos.y++;
+    dropCounter = 0;
+  }
+});
