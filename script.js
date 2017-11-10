@@ -12,7 +12,7 @@ const matrix = [
 
 const player = {
   pos: {x: 5, y: 5},
-  matrix
+  matrix: createPiece('T')
 };
 
 const arena = createMatrix(12, 20);
@@ -63,6 +63,71 @@ function createMatrix(w, h){
     matrix.push(new Array(w).fill(0));
   }
   return matrix;
+}
+
+/**
+ * @see https://en.wikipedia.org/wiki/Tetromino
+ * @param {String} type 
+ */
+function createPiece(type) {
+  switch (type) {
+    case 'T':
+      return [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+      ];
+      break;
+    case 'O':
+      return [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ];
+      break;
+    case 'S':
+      return [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ];
+      break;
+    case 'Z':
+      return [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ];
+      break;
+    case 'I':
+      return [
+        [1, 0, 0, 0],
+        [1, 0, 0, 0],
+        [1, 0, 0, 0],
+        [1, 0, 0, 0],
+      ];
+      break;
+    case 'J':
+      return [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 1],
+      ];
+      break;
+    case 'L':
+      return [
+        [0, 1, 0],
+        [0, 1, 0],
+        [0, 1, 1],
+      ];
+      break;
+    default:
+      return [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+      ];
+  }
 }
 
 /**
@@ -139,6 +204,14 @@ draw = () => {
   drawMartrix(player.matrix, player.pos);
 }
 
+function playerReset() {
+  const pieces = 'IJLOSTZ';
+  player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+  player.pos.y = 0;
+  player.pos.x = (arena[0].length / 2 | 0) -
+                 (player.matrix[0].length / 2 | 0);
+}
+
 playerDrop = () => {
   player.pos.y++;
   if (collision(arena, player)) {
@@ -149,7 +222,9 @@ playerDrop = () => {
     merge(arena, player);
 
     // player now starts from the top
-    player.pos.y = 0;
+    // reset the player piece
+    // postion the piece in the middle
+    playerReset();
   }
   dropCounter = 0;
 }
