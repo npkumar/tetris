@@ -75,7 +75,7 @@ function merge(arena, player) {
   player.matrix.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value != 0) {
-        // x y for inverted T shape
+        // x y for T shape
         // 0 1
         // 1 1
         // 2 1
@@ -84,6 +84,29 @@ function merge(arena, player) {
       }
     });
   });
+}
+
+function rotate(matrix, dir) {
+  // transponse
+  for (let y = 0; y < matrix.length; y++) {
+    for (let x = 0; x < y; x++) {
+      // tuple switch
+      [
+        matrix[x][y],
+        matrix[y][x]
+      ] = [
+        matrix[y][x],
+        matrix[x][y]
+      ];
+    }
+  }
+
+  // reverse
+  if (dir > 0) {
+    matrix.forEach(row => row.reverse());
+  } else {
+    matrix.reverse();
+  }
 }
 
 drawMartrix = (matrix, offset) => {
@@ -131,6 +154,17 @@ playerDrop = () => {
   dropCounter = 0;
 }
 
+playerMove = dir => {
+  player.pos.x += dir;
+  if (collision(arena, player)) {
+    player.pos.x -= dir;
+  }
+}
+
+playerRotate = dir => {
+  rotate(player.matrix, dir);
+}
+
 update = (time = 0) => {
   const deltaTime = time - lastTime;
   lastTime = time;
@@ -153,10 +187,14 @@ update();
 document.addEventListener('keydown', event => {
   // or use keyCode, code is more readable
   if (event.code === 'ArrowLeft') {
-    player.pos.x--;
+    playerMove(-1);
   } else if (event.code === 'ArrowRight') {
-    player.pos.x++;
+    playerMove(1);
   } else if (event.code === 'ArrowDown') {
     playerDrop();
+  } else if (event.code === 'KeyQ') {
+    playerRotate(-1);
+  } else if (event.code === 'KeyW' || event.code === 'Space') {
+    playerRotate(1);
   }
 });
