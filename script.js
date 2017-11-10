@@ -163,6 +163,12 @@ playerMove = dir => {
 
 playerRotate = dir => {
   rotate(player.matrix, dir);
+  while (collision(arena, player)) {
+    // undo the last rotate
+    // TODO: fix this if you want the player
+    // rotate to jump off the wall
+    rotate(player.matrix, -dir);
+  }
 }
 
 update = (time = 0) => {
