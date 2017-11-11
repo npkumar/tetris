@@ -24,7 +24,7 @@ let dropCounter = 0;
 let dropInterval = 1000; // 1 second
 
 function updateScore() {
-  document.getElementById('score').innerText = player.score;
+  document.getElementById('score').innerText = `Score: ${player.score}`;
 };
 
 /**
