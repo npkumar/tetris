@@ -23,6 +23,35 @@ let dropCounter = 0;
 let dropInterval = 1000; // 1 second
 
 /**
+ * Sweeps arena for filled (1) rows
+ * If found, splices it, resets to unfilled (0)
+ * And the row back at top of arena (unshift)
+ * Reset the offset of height, since we spliced
+ */
+function arenaSweep() {
+  // sweep from bottom
+  outer: for (let y = arena.length - 1; y > 0; y--) {
+    for (let x = 0; x < arena[y].length; x++) {
+      // not filled
+      if (arena[y][x] === 0) {
+        // we want to skip that row completely
+        continue outer;
+      }
+    }
+
+    // the row has been filled, so we need to remove it
+    // splice the row, assign and fill it back with  0
+    const row = arena.splice(y, 1)[0].fill(0);
+
+    // and put it back on the top
+    arena.unshift(row);
+
+    // since we removed an index, we need to offset y
+    ++y;
+  }
+}
+
+/**
  * Check if any location on player matrix
  * and corresponding position on arena matrix is not 0
  * If both not 0, collision occured.
@@ -234,6 +263,9 @@ playerDrop = () => {
     // reset the player piece
     // postion the piece in the middle
     playerReset();
+
+    // remove filled rows if any
+    arenaSweep();
   }
   dropCounter = 0;
 }
