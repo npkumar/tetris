@@ -10,6 +10,7 @@ const matrix = [
   [0, 1, 0],
 ];
 
+const colors = ['cyan', 'blue', 'orange', 'yellow', 'green', 'violet', 'red'];
 const player = {
   pos: {x: 5, y: 5},
   matrix: createPiece('T')
@@ -180,7 +181,9 @@ drawMartrix = (matrix, offset) => {
   matrix.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value != 0) {
-        context.fillStyle = 'red';
+        // Don't do this if you can't take strobes
+        // each cell changes color for every frame refresh
+        context.fillStyle = colors[Math.floor((Math.random() * colors.length) + 1)];
         context.fillRect(
           x + offset.x,
           y + offset.y,
@@ -210,6 +213,12 @@ function playerReset() {
   player.pos.y = 0;
   player.pos.x = (arena[0].length / 2 | 0) -
                  (player.matrix[0].length / 2 | 0);
+
+  // if there is a collision on reset, game over
+  if (collision(arena, player)) {
+    // clear arena
+    arena.forEach(row => row.fill(0));
+  }
 }
 
 playerDrop = () => {
