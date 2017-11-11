@@ -56,7 +56,8 @@ function arenaSweep() {
     // since we removed an index, we need to offset y
     ++y;
 
-    // increase player score and increase score the next time
+    // increase player score and double score based on
+    // number of rows removed
     player.score += rowCount * 10;
     rowCount *= 2;
   }
