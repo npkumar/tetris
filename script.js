@@ -12,8 +12,9 @@ const matrix = [
 
 const colors = ['cyan', 'blue', 'orange', 'yellow', 'green', 'violet', 'red'];
 const player = {
-  pos: {x: 5, y: 5},
-  matrix: createPiece('T')
+  pos: {x: 0, y: 0},
+  matrix: null,
+  score: 0
 };
 
 const arena = createMatrix(12, 20);
@@ -22,6 +23,10 @@ let lastTime = 0;
 let dropCounter = 0;
 let dropInterval = 1000; // 1 second
 
+function updateScore() {
+  document.getElementById('score').innerText = player.score;
+};
+
 /**
  * Sweeps arena for filled (1) rows
  * If found, splices it, resets to unfilled (0)
@@ -29,6 +34,8 @@ let dropInterval = 1000; // 1 second
  * Reset the offset of height, since we spliced
  */
 function arenaSweep() {
+  let rowCount = 1;
+
   // sweep from bottom
   outer: for (let y = arena.length - 1; y > 0; y--) {
     for (let x = 0; x < arena[y].length; x++) {
@@ -48,6 +55,10 @@ function arenaSweep() {
 
     // since we removed an index, we need to offset y
     ++y;
+
+    // increase player score and increase score the next time
+    player.score += rowCount * 10;
+    rowCount *= 2;
   }
 }
 
@@ -247,6 +258,10 @@ function playerReset() {
   if (collision(arena, player)) {
     // clear arena
     arena.forEach(row => row.fill(0));
+
+    // reset player
+    player.score = 0;
+    updateScore();
   }
 }
 
@@ -266,6 +281,9 @@ playerDrop = () => {
 
     // remove filled rows if any
     arenaSweep();
+
+    // update player score
+    updateScore();
   }
   dropCounter = 0;
 }
@@ -301,6 +319,15 @@ update = (time = 0) => {
   draw();
   requestAnimationFrame(update);
 }
+
+/**
+ * MAIN
+ */
+// first reset player
+playerReset();
+
+// bootstrap score
+updateScore();
 
 // main update call
 update();
